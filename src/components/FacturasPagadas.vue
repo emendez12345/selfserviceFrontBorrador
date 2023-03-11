@@ -46,35 +46,40 @@
               <em
                 class="pi pi-eye mr-2 text-black-500 text-xl cursor-pointer"
                 v-tooltip.left="'Documentos del proveedor'"
-                @click="verDetalleDoc(slotProps.data.facturas)"
+                @click="verDetalleDoc(slotProps.data)"
               ></em>
             </template>
           </Column>
         </DataTable>
         <Dialog
           v-model:visible="proveedorDialog"
-          :style="{ width: '450px' }"
+          :style="{ width: '1550px' }"
           header="Documentos Proveedor"
           :modal="true"
           class="p-fluid"
         >
-          <DataTable
-            ref="dt"
-            :value="factura"
-            v-model:selection="seleccionarDocumentos"
-            :loading="loading"
-            stripedRows
-            responsiveLayout="scroll"
-            @row-select="onProductSelect"
-          >
-            <ColumnGroup type="header">
-              <Row>
-                <Column header="Factura" :rowspan="3" />
-                <Column header="Valor a pagar" :colspan="4" />
-              </Row>
-            </ColumnGroup>
-            <Column field="numero" />
-          </DataTable>
+        <DataTable :value="factura.numero" tableStyle="min-width: 50rem">
+    <ColumnGroup type="header">
+        <Row>
+            <Column header="Factura" :rowspan="3" />
+            <Column header="Sale Rate" :colspan="4" />
+        </Row>
+        <Row>
+            <Column header="Sales" :colspan="2" />
+            <Column header="Profits" :colspan="2" />
+        </Row>
+        <Row>
+            <Column header="Last Year" sortable field="lastYearSale" />
+            <Column header="This Year" sortable field="thisYearSale" />
+            <Column header="Last Year" sortable field="lastYearProfit" />
+            <Column header="This Year" sortable field="thisYearProfit" />
+        </Row>
+    </ColumnGroup>
+    <Column field="numero" />
+    <ColumnGroup type="footer">
+       
+    </ColumnGroup>
+</DataTable>
         </Dialog>
       </div>
     </div>
@@ -116,10 +121,12 @@ export default {
     },
     async verDetalleDoc(event) {
       this.proveedorDialog = true;
-      event.forEach((e) => {
-        this.factura = e;
-        console.log(this.factura);
-      });
+      this.factura={numero:event.facturas}
+      console.log(this.factura.numero);
+      // event.forEach((e) => {
+      //   this.factura = e;
+      //   console.log(this.factura);
+      // });
     },
     hideDialog() {
       this.proveedorDialog = false;
