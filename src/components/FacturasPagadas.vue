@@ -8,6 +8,20 @@
             <h5 class="m-4">Proveedores Compras</h5>
           </template>
         </Toolbar>
+        <FileUpload
+          name="PDF"
+          :customUpload="true"
+          @uploader="subirArchivo($event)"
+          @upload="onUpload"
+          :multiple="true"
+          :maxFileSize="1000000"
+          invalidFileSizeMessage="El tamaño del archivo es demasiado grande"
+          chooseLabel="Seleccionar"
+          uploadLabel="Subir"
+          cancelLabel="Cancelar"
+          invalidFileTypeMessage="El tipo de archivo no es válido"
+        />
+
         <DataTable
           ref="dt"
           :value="proveedores"
@@ -44,15 +58,22 @@
           :modal="true"
           class="p-fluid"
         >
-          <DataTable ref="dt" :value="factura" v-model:selection="seleccionarDocumentos" :loading="loading" stripedRows responsiveLayout="scroll" @row-select="onProductSelect">
+          <DataTable
+            ref="dt"
+            :value="factura"
+            v-model:selection="seleccionarDocumentos"
+            :loading="loading"
+            stripedRows
+            responsiveLayout="scroll"
+            @row-select="onProductSelect"
+          >
             <ColumnGroup type="header">
-            <Row>
+              <Row>
                 <Column header="Factura" :rowspan="3" />
                 <Column header="Valor a pagar" :colspan="4" />
-            </Row>
-        </ColumnGroup>
-        <Column field="numero" />
-
+              </Row>
+            </ColumnGroup>
+            <Column field="numero" />
           </DataTable>
         </Dialog>
       </div>
@@ -61,15 +82,16 @@
 </template>
 
 <script>
+import { subirPdf } from '../api/proveedorService';
 export default {
   setup() {},
   data() {
     return {
-    //   loading: true,
+      //   loading: true,
       proveedorDialog: false,
       facturas: null,
-      factura:null,
-      proveedores: null
+      factura: null,
+      proveedores: null,
     };
   },
   created() {
@@ -80,17 +102,22 @@ export default {
     this.proveedores = [
       {
         numero_identificacion: "12345",
-        facturas: [
-             {numero:'98765342'}
-        ],
+        facturas: [{ numero: "98765342" }],
       },
     ];
   },
   methods: {
+    async subirArchivo(event){
+            this.pdfaux = event.files[0];
+            console.log(this.pdfaux);
+            await subirPdf('/subirexcel', { numero_identificacion: this.identificacion, id_documento: 11, File: this.pdfaux }, 'multipart/form-data');
+            this.$toast.add({ severity: 'success', summary: 'Success Message', detail: 'Archivo Subido', life: 10000 });
+
+    },
     async verDetalleDoc(event) {
       this.proveedorDialog = true;
-      event.forEach(e => {
-        this.factura=e;
+      event.forEach((e) => {
+        this.factura = e;
         console.log(this.factura);
       });
     },
