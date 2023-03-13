@@ -53,33 +53,36 @@
         </DataTable>
         <Dialog
           v-model:visible="proveedorDialog"
-          :style="{ width: '1550px' }"
           header="Documentos Proveedor"
           :modal="true"
           class="p-fluid"
         >
-        <DataTable :value="factura.numero" tableStyle="min-width: 50rem">
-    <ColumnGroup type="header">
-        <Row>
-            <Column header="Factura" :rowspan="3" />
-            <Column header="Sale Rate" :colspan="4" />
-        </Row>
-        <Row>
-            <Column header="Sales" :colspan="2" />
-            <Column header="Profits" :colspan="2" />
-        </Row>
-        <Row>
-            <Column header="Last Year" sortable field="lastYearSale" />
-            <Column header="This Year" sortable field="thisYearSale" />
-            <Column header="Last Year" sortable field="lastYearProfit" />
-            <Column header="This Year" sortable field="thisYearProfit" />
-        </Row>
-    </ColumnGroup>
-    <Column field="numero" />
-    <ColumnGroup type="footer">
-       
-    </ColumnGroup>
-</DataTable>
+          <DataTable :value="factura.factura" tableStyle="min-width: 10rem">
+            <ColumnGroup type="header">
+              <Row>
+                <Column header="Factura" :rowspan="3" />
+              </Row>
+              <Row>
+                <Column header="Valor" />
+              </Row>
+            </ColumnGroup>
+            <Column field="numero" />
+            <Column field="valor">
+              <template #body="slotProps">
+                {{ slotProps.data.valor }}
+              </template>
+            </Column>
+            <ColumnGroup type="footer">
+              <Row>
+                <Column
+                  footer="Total:"
+                  :colspan="3"
+                  footerStyle="text-align:right"
+                />
+                <Column :footer="sumarValores" />
+              </Row>
+            </ColumnGroup>
+          </DataTable>
         </Dialog>
       </div>
     </div>
@@ -87,7 +90,7 @@
 </template>
 
 <script>
-import { subirPdf } from '../api/proveedorService';
+import { subirPdf } from "../api/proveedorService";
 export default {
   setup() {},
   data() {
@@ -106,41 +109,59 @@ export default {
 
     this.proveedores = [
       {
-        numero_identificacion: "12345",
-        facturas: [{ numero: "98765342" }],
+        numero_identificacion: "1144030066",
+        facturas: [
+          { numero: "98765342", valor: 123000 },
+          { numero: "92547891", valor: 250000 },
+        ],
       },
     ];
   },
   methods: {
-    async subirArchivo(event){
-            this.pdfaux = event.files[0];
-            console.log(this.pdfaux);
-            await subirPdf('/subirexcel', { numero_identificacion: this.identificacion, id_documento: 11, File: this.pdfaux }, 'multipart/form-data');
-            this.$toast.add({ severity: 'success', summary: 'Success Message', detail: 'Archivo Subido', life: 10000 });
-
+    // formatCurrency(value) {
+    //   return value.toLocaleString("en-US", {
+    //     style: "currency",
+    //     currency: "USD",
+    //   });
+    // },
+    async subirArchivo(event) {
+      this.pdfaux = event.files[0];
+      await subirPdf(
+        "/subirexcel",
+        {
+          numero_identificacion: this.identificacion,
+          id_documento: 11,
+          File: this.pdfaux,
+        },
+        "multipart/form-data"
+      );
+      this.$toast.add({
+        severity: "success",
+        summary: "Success Message",
+        detail: "Archivo Subido",
+        life: 10000,
+      });
     },
-    async verDetalleDoc(event) {
+    verDetalleDoc(event) {
       this.proveedorDialog = true;
-      this.factura={numero:event.facturas}
-      console.log(this.factura.numero);
-      // event.forEach((e) => {
-      //   this.factura = e;
-      //   console.log(this.factura);
-      // });
+      this.factura = { factura: event.facturas };
     },
     hideDialog() {
       this.proveedorDialog = false;
       this.validarProveedorDialog = false;
       this.NuevaAreaProveedorDialog = false;
     },
+  
   },
-  watch: {
-    async rangeDate(newQuestion) {
-      if (newQuestion) {
-        await this.verDetalleDoc(newQuestion);
-      }
+  computed: {
+     sumarValores() {
+          let total = 0;
+          for(let fac of this.factura.factura) {
+              total += fac.valor;
+          }
+
+         return total;
     },
-    deep: true,
   },
 };
 </script>
