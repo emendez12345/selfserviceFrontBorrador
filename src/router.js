@@ -35,6 +35,11 @@ const routes = [
                 component: () => import('./components/FacturasPagadas.vue')
             },
             {
+                path: '/noticias',
+                name: 'noticias',
+                component: () => import('./components/Noticias.vue')
+            },
+            {
                 path: '/input',
                 name: 'input',
                 component: () => import('./components/InputDemo.vue')

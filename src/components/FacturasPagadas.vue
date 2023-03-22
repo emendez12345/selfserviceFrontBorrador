@@ -34,11 +34,19 @@
         >
           <Column selectionMode="multiple" headerStyle="width: 3rem"></Column>
           <Column
-            field="Número de identificacion"
-            header="Número de identificación."
+            field="Sociedad"
+            header="Sociedad."
           >
             <template #body="slotProps">
-              {{ slotProps.data.numero_identificacion }}
+              {{ slotProps.data.sociedad}}
+            </template>
+          </Column>
+          <Column
+            field="Banco"
+            header="Banco."
+          >
+            <template #body="slotProps">
+              {{ slotProps.data.banco}}
             </template>
           </Column>
           <Column header="Acciones">
@@ -109,10 +117,17 @@ export default {
 
     this.proveedores = [
       {
-        numero_identificacion: "1144030066",
+        sociedad: "PAO-CALI",
+        banco: "Banco Occidente",
         facturas: [
-          { numero: "98765342", valor: 123000 },
-          { numero: "92547891", valor: 250000 },
+          { 
+            numero: "98765342", 
+            valor: 123000 
+          },
+          { 
+            numero: "92547891", 
+            valor: 250000 
+          },
         ],
       },
     ];

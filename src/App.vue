@@ -48,6 +48,14 @@ export default {
                         to: '/facturaspagadas'
                     }]
                 },
+                {
+                    label: 'Noticias',
+                    items: [{
+                        label: 'noticias', 
+                        icon: 'pi pi-fw pi-home', 
+                        to: '/noticias'
+                    }]
+                },
 				{
 					label: 'UI Components', icon: 'pi pi-fw pi-sitemap',
 					items: [
