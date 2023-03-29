@@ -1,6 +1,6 @@
 <template>
 	<div :class="containerClass" @click="onWrapperClick">
-        <AppTopBar @menu-toggle="onMenuToggle" />
+        <AppTopbarPrueba @menu-toggle="onMenuToggle" />
         <div class="layout-sidebar" @click="onSidebarClick">
             <AppMenu :model="menu" @menuitem-click="onMenuItemClick" />
         </div>
@@ -20,7 +20,8 @@
 </template>
 
 <script>
-import AppTopBar from './AppTopbar.vue';
+// import AppTopBar from './AppTopbar.vue';
+import AppTopbarPrueba from './AppTopbarPrueba.vue';
 import AppMenu from './AppMenu.vue';
 import AppConfig from './AppConfig.vue';
 import AppFooter from './AppFooter.vue';
@@ -257,7 +258,8 @@ export default {
             this.removeClass(document.body, 'body-overflow-hidden');
     },
     components: {
-        'AppTopBar': AppTopBar,
+        // 'AppTopBar': AppTopBar,
+        'AppTopbarPrueba':AppTopbarPrueba,
         'AppMenu': AppMenu,
         'AppConfig': AppConfig,
         'AppFooter': AppFooter,
